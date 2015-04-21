@@ -21,4 +21,8 @@
                     images:(NSArray *)images
               descriptions:(NSArray *)descriptions;
 
+- (void)setupForSlideTypes:(NSArray *)slideTypes
+            usingVideoURLs:(NSArray *)videoURLs
+                 andImages:(NSArray *)images;
+
 @end

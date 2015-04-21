@@ -8,6 +8,18 @@
 
 #import "TDBWalkthrough.h"
 
+@interface TDBWalkthrough ()
+
+@property (strong, nonatomic) NSString *className;
+@property (strong, nonatomic) NSString *nibName;
+
+@property (strong, nonatomic) NSMutableArray *images;
+@property (strong, nonatomic) NSMutableArray *videoURLs;
+@property (strong, nonatomic) NSArray *descriptions;
+@property (strong, nonatomic) NSMutableArray *slideTypes;
+
+@end
+
 @implementation TDBWalkthrough
 
 
@@ -33,9 +45,30 @@
         
         self.className = @"TDBSimpleWhite";
         self.nibName = @"TDBSimpleWhite";
+        _videoURLs = [NSMutableArray array];
+        _images = [NSMutableArray array];
+        _slideTypes = [NSMutableArray array];
     }
     
     return self;
+}
+
+#pragma mark - Page Addition
+
+- (void)addPageWithImage:(UIImage *)image description:(NSString *)description andNibName:(NSString *)nibNameOrNil
+{
+    NSParameterAssert(image);
+    [self.slideTypes addObject:@(ABWalkthroughSlideTypePicture)];
+    [self.images addObject:image];
+    
+    
+}
+
+- (void)addPageWithVideoURL:(NSURL *)videoURL andDescription:(NSString *)description
+{
+    NSParameterAssert(videoURL);
+    [self.slideTypes addObject:@(ABWalkthroughSlideTypeVideo)];
+    [self.videoURLs addObject:videoURL];
 }
 
 
@@ -45,10 +78,11 @@
 {
     UIWindow* window = [[UIApplication sharedApplication] keyWindow];
     
-    [self.walkthroughViewController setupWithClassName:self.className
-                                               nibName:self.nibName
-                                                images:self.images
-                                          descriptions:self.descriptions];
+//    [self.walkthroughViewController setupWithClassName:self.className
+//                                               nibName:self.nibName
+//                                                images:self.images
+//                                          descriptions:self.descriptions];
+    [self.walkthroughViewController setupForSlideTypes:self.slideTypes usingVideoURLs:self.videoURLs andImages:self.images];
     
     [window.rootViewController presentViewController:self.walkthroughViewController animated:NO completion:nil];
 }

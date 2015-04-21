@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "TDBWalkThroughViewController.h"
 
+typedef NS_ENUM(NSInteger, ABWalkthroughSlideType) {
+    ABWalkthroughSlideTypePicture,
+    ABWalkthroughSlideTypeVideo
+};
+
 @protocol TDBWalkthroughDelegate
 
 @optional
@@ -24,15 +29,14 @@
 
 @property (strong, nonatomic) TDBWalkthroughViewController *walkthroughViewController;
 
-@property (strong, nonatomic) NSString *className;
-@property (strong, nonatomic) NSString *nibName;
-
-@property (strong, nonatomic) NSArray *images;
-@property (strong, nonatomic) NSArray *descriptions;
-
 #pragma mark - Singleton
 
 + (id)sharedInstance;
+
+#pragma mark - Page Addition
+
+- (void)addPageWithImage:(UIImage *)image description:(NSString *)description andNibName:(NSString *)nibNameOrNil;
+- (void)addPageWithVideoURL:(NSURL *)videoURL andDescription:(NSString *)description;
 
 
 #pragma mark - Actions
@@ -49,7 +53,7 @@
 - (void)dismiss;
 
 
-/**
+/*
  *  Dismiss walkthrough with animation
  *
  *  @param animation The animation (UIModalTransitionStyle)

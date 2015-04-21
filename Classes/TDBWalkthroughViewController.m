@@ -9,10 +9,14 @@
 #import "TDBWalkthrough.h"
 #import "TDBWalkThroughViewController.h"
 #import "TDBInterface.h"
+#import "TDBSimpleWhite.h"
+#import "ABVideoLoopViewController.h"
+
 
 @interface TDBWalkthroughViewController ()
 
 @property (strong, nonatomic) NSMutableArray *viewControllers;
+@property (strong, nonatomic) NSMutableArray *videoPlayers;
 
 @end
 
@@ -28,6 +32,7 @@
         self.scrollView.showsHorizontalScrollIndicator = NO;
         self.scrollView.delegate = self;
         [self.view addSubview:self.scrollView];
+        _viewControllers = [NSMutableArray new];
     }
     return self;
 }
@@ -35,11 +40,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
-    
     self.viewControllers = [[NSMutableArray alloc] init];
 }
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -86,6 +94,53 @@
     [self.view addSubview:self.pageControl];
 }
 
+- (void)setupForSlideTypes:(NSArray *)slideTypes usingVideoURLs:(NSArray *)videoURLs andImages:(NSArray *)images
+{
+    CGFloat width = CGRectGetWidth(self.view.frame);
+    CGFloat heigth = CGRectGetHeight(self.view.frame);
+    
+    NSInteger slidesNumber = slideTypes.count;
+    NSInteger slideIndex, videoIndex, imageIndex;
+    slideIndex = videoIndex = imageIndex = 0;
+    for (NSNumber *collectionType in slideTypes) {
+        ABWalkthroughSlideType slideType = collectionType.integerValue;
+        if (slideType == ABWalkthroughSlideTypeVideo) {
+            NSURL *videoURL = videoURLs[videoIndex++];
+            MPMoviePlayerViewController *playerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
+//            MPMoviePlayerController *playerController = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
+            playerViewController.moviePlayer.fullscreen = YES;
+            playerViewController.moviePlayer.scalingMode = MPMovieScalingModeAspectFill;
+            [playerViewController.moviePlayer setAllowsAirPlay:NO];
+            playerViewController.moviePlayer.controlStyle = MPMovieScalingModeNone;
+            playerViewController.moviePlayer.repeatMode = MPMovieRepeatModeOne;
+            playerViewController.view.frame = CGRectMake(width * slideIndex, 0, width, heigth);
+            [playerViewController.moviePlayer prepareToPlay];
+            [self.scrollView addSubview:playerViewController.view];
+            
+            [self.viewControllers addObject:playerViewController];
+        } else if (slideType == ABWalkthroughSlideTypePicture) {
+            UIImage *image = images[imageIndex++];
+            TDBSimpleWhite *imageController = [[TDBSimpleWhite alloc] initWithNibName:@"TDBSimpleWhite" bundle:nil];
+            [imageController setupWithImage:image andText:nil];
+            [imageController setDelegate:[[TDBWalkthrough sharedInstance] delegate]];
+            imageController.view.frame = CGRectMake(width * slideIndex, 0, width, heigth);
+            [self.scrollView addSubview:imageController.view];
+            [self.viewControllers addObject:imageController];
+        }
+        slideIndex++;
+    }
+    self.scrollView.contentSize = CGSizeMake(width * slidesNumber, heigth);
+    
+    // Adding Page Control
+    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(100, 518, 120, 30)];
+    self.pageControl.numberOfPages = slidesNumber;
+    self.pageControl.currentPage = 0;
+//    self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+//    self.pageControl.currentPageIndicatorTintColor = [UIColor darkGrayColor];
+    
+    [self.view addSubview:self.pageControl];
+    
+}
 
 #pragma mark - UIScrollViewDelegate
 
