@@ -106,15 +106,18 @@
         ABWalkthroughSlideType slideType = collectionType.integerValue;
         if (slideType == ABWalkthroughSlideTypeVideo) {
             NSURL *videoURL = videoURLs[videoIndex++];
-            MPMoviePlayerViewController *playerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-//            MPMoviePlayerController *playerController = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
-            playerViewController.moviePlayer.fullscreen = YES;
-            playerViewController.moviePlayer.scalingMode = MPMovieScalingModeAspectFill;
-            [playerViewController.moviePlayer setAllowsAirPlay:NO];
-            playerViewController.moviePlayer.controlStyle = MPMovieScalingModeNone;
-            playerViewController.moviePlayer.repeatMode = MPMovieRepeatModeOne;
+//            MPMoviePlayerViewController *playerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
+////            MPMoviePlayerController *playerController = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
+//            playerViewController.moviePlayer.fullscreen = YES;
+//            playerViewController.moviePlayer.scalingMode = MPMovieScalingModeAspectFill;
+//            [playerViewController.moviePlayer setAllowsAirPlay:NO];
+//            playerViewController.moviePlayer.controlStyle = MPMovieScalingModeNone;
+//            playerViewController.moviePlayer.repeatMode = MPMovieRepeatModeOne;
+//            playerViewController.view.frame = CGRectMake(width * slideIndex, 0, width, heigth);
+//            [playerViewController.moviePlayer prepareToPlay];
+//            [self.scrollView addSubview:playerViewController.view];
+            ABVideoLoopViewController *playerViewController = [[ABVideoLoopViewController alloc] initWithNibName:nil bundle:nil];
             playerViewController.view.frame = CGRectMake(width * slideIndex, 0, width, heigth);
-            [playerViewController.moviePlayer prepareToPlay];
             [self.scrollView addSubview:playerViewController.view];
             
             [self.viewControllers addObject:playerViewController];

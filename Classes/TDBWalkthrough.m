@@ -7,6 +7,7 @@
 //
 
 #import "TDBWalkthrough.h"
+#import "ABVideoLoopViewController.h"
 
 @interface TDBWalkthrough ()
 
