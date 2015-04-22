@@ -44,7 +44,7 @@ typedef NS_ENUM(NSInteger, ABWalkthroughSlideType) {
 /**
  *  Show walkthrough
  */
-- (void)show;
+- (void)showInWindow:(UIWindow *)window;
 
 
 /**

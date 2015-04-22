@@ -10,4 +10,6 @@
 
 @interface ABVideoLoopViewController : UIViewController
 
+@property (strong, nonatomic) NSString *resFileName;
+
 @end

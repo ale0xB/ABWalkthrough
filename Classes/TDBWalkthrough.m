@@ -75,9 +75,8 @@
 
 #pragma mark - Actions
 
-- (void)show
+- (void)showInWindow:(UIWindow *)window
 {
-    UIWindow* window = [[UIApplication sharedApplication] keyWindow];
     
 //    [self.walkthroughViewController setupWithClassName:self.className
 //                                               nibName:self.nibName
@@ -85,7 +84,8 @@
 //                                          descriptions:self.descriptions];
     [self.walkthroughViewController setupForSlideTypes:self.slideTypes usingVideoURLs:self.videoURLs andImages:self.images];
     
-    [window.rootViewController presentViewController:self.walkthroughViewController animated:NO completion:nil];
+//    [window.rootViewController presentViewController:self.walkthroughViewController animated:NO completion:nil];
+    window.rootViewController = self.walkthroughViewController;
 }
 
 

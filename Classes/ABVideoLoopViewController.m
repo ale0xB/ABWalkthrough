@@ -38,7 +38,7 @@
     [super viewDidLoad];
     [self.view layoutIfNeeded];
     
-    [self performSelector:@selector(prepareVideo) withObject:nil afterDelay:0.1];
+    [self prepareVideo];
 }
 
 
@@ -53,6 +53,11 @@
     [self.media startAnimator];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+}
 
 - (void)prepareVideo
 {
@@ -85,7 +90,7 @@
     self.media.resourceLoader = resLoader;
     self.media.frameDecoder = [AVMvidFrameDecoder aVMvidFrameDecoder];
     
-    self.media.animatorRepeatCount = 100;
+    self.media.animatorRepeatCount = INT_MAX;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(animatorDoneNotification:) name:AVAnimatorDoneNotification object:self.media];
     
