@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, ABWalkthroughSlideType) {
 #pragma mark - Page Addition
 
 - (void)addPageWithImage:(UIImage *)image description:(NSString *)description andNibName:(NSString *)nibNameOrNil;
-- (void)addPageWithVideoURL:(NSURL *)videoURL andDescription:(NSString *)description;
+- (void)addPageWithVideoFileName:(NSString *)videoFileName andDescription:(NSString *)description;
 
 
 #pragma mark - Actions

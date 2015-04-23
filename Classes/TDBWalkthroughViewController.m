@@ -94,7 +94,7 @@
     [self.view addSubview:self.pageControl];
 }
 
-- (void)setupForSlideTypes:(NSArray *)slideTypes usingVideoURLs:(NSArray *)videoURLs andImages:(NSArray *)images
+- (void)setupForSlideTypes:(NSArray *)slideTypes usingVideoFileNames:(NSArray *)videoFileNames andImages:(NSArray *)images
 {
     CGFloat width = CGRectGetWidth(self.view.frame);
     CGFloat heigth = CGRectGetHeight(self.view.frame);
@@ -105,21 +105,11 @@
     for (NSNumber *collectionType in slideTypes) {
         ABWalkthroughSlideType slideType = collectionType.integerValue;
         if (slideType == ABWalkthroughSlideTypeVideo) {
-            NSURL *videoURL = videoURLs[videoIndex++];
-//            MPMoviePlayerViewController *playerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-////            MPMoviePlayerController *playerController = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
-//            playerViewController.moviePlayer.fullscreen = YES;
-//            playerViewController.moviePlayer.scalingMode = MPMovieScalingModeAspectFill;
-//            [playerViewController.moviePlayer setAllowsAirPlay:NO];
-//            playerViewController.moviePlayer.controlStyle = MPMovieScalingModeNone;
-//            playerViewController.moviePlayer.repeatMode = MPMovieRepeatModeOne;
-//            playerViewController.view.frame = CGRectMake(width * slideIndex, 0, width, heigth);
-//            [playerViewController.moviePlayer prepareToPlay];
-//            [self.scrollView addSubview:playerViewController.view];
+            NSString *videoFileName = videoFileNames[videoIndex++];
             ABVideoLoopViewController *playerViewController = [[ABVideoLoopViewController alloc] initWithNibName:nil bundle:nil];
+            playerViewController.resFileName = videoFileName;
             playerViewController.view.frame = CGRectMake(width * slideIndex, 0, width, heigth);
             [self.scrollView addSubview:playerViewController.view];
-            
             [self.viewControllers addObject:playerViewController];
         } else if (slideType == ABWalkthroughSlideTypePicture) {
             UIImage *image = images[imageIndex++];

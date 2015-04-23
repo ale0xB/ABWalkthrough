@@ -15,7 +15,7 @@
 @property (strong, nonatomic) NSString *nibName;
 
 @property (strong, nonatomic) NSMutableArray *images;
-@property (strong, nonatomic) NSMutableArray *videoURLs;
+@property (strong, nonatomic) NSMutableArray *videoFileNames;
 @property (strong, nonatomic) NSArray *descriptions;
 @property (strong, nonatomic) NSMutableArray *slideTypes;
 
@@ -46,7 +46,7 @@
         
         self.className = @"TDBSimpleWhite";
         self.nibName = @"TDBSimpleWhite";
-        _videoURLs = [NSMutableArray array];
+        _videoFileNames = [NSMutableArray array];
         _images = [NSMutableArray array];
         _slideTypes = [NSMutableArray array];
     }
@@ -65,11 +65,11 @@
     
 }
 
-- (void)addPageWithVideoURL:(NSURL *)videoURL andDescription:(NSString *)description
+- (void)addPageWithVideoFileName:(NSString *)videoFileName andDescription:(NSString *)description;
 {
-    NSParameterAssert(videoURL);
+    NSParameterAssert(videoFileName);
     [self.slideTypes addObject:@(ABWalkthroughSlideTypeVideo)];
-    [self.videoURLs addObject:videoURL];
+    [self.videoFileNames addObject:videoFileName];
 }
 
 
@@ -82,7 +82,7 @@
 //                                               nibName:self.nibName
 //                                                images:self.images
 //                                          descriptions:self.descriptions];
-    [self.walkthroughViewController setupForSlideTypes:self.slideTypes usingVideoURLs:self.videoURLs andImages:self.images];
+    [self.walkthroughViewController setupForSlideTypes:self.slideTypes usingVideoFileNames:self.videoFileNames andImages:self.images];
     
 //    [window.rootViewController presentViewController:self.walkthroughViewController animated:NO completion:nil];
     window.rootViewController = self.walkthroughViewController;

@@ -61,9 +61,6 @@
 
 - (void)prepareVideo
 {
-    NSString *resFileName = @"iPhone5.m4v";
-    NSString *tmpFileName = @"iPhone5.mvid";
-//    [walkthrough addPageWithVideoURL:[[NSBundle mainBundle] URLForResource:deviceString withExtension:@"m4v" subdirectory:@"Videos"] andDescription:nil];
     CALayer *mainLayer = self.view.layer;
     CALayer *renderLayer = [[CALayer alloc] init];
     
@@ -82,9 +79,11 @@
     
     AVAsset2MvidResourceLoader *resLoader = [AVAsset2MvidResourceLoader aVAsset2MvidResourceLoader];
     
+    
+    NSString *tmpFileName = [[self.resFileName stringByDeletingPathExtension] stringByAppendingPathExtension:@"mvid"];
     NSString *tmpPath = [AVFileUtil getTmpDirPath:tmpFileName];
     
-    resLoader.movieFilename = resFileName;
+    resLoader.movieFilename = self.resFileName;
     resLoader.outPath = tmpPath;
     
     self.media.resourceLoader = resLoader;

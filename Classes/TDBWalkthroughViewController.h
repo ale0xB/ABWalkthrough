@@ -22,7 +22,7 @@
               descriptions:(NSArray *)descriptions;
 
 - (void)setupForSlideTypes:(NSArray *)slideTypes
-            usingVideoURLs:(NSArray *)videoURLs
+       usingVideoFileNames:(NSArray *)videoFileNames
                  andImages:(NSArray *)images;
 
 @end
