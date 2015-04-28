@@ -7,14 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TDBWalkthrough.h"
 
+@protocol TDBInterfaceDelegate;
 @interface TDBInterface : UIViewController
 
-@property (strong, nonatomic) NSObject<TDBWalkthroughDelegate>* delegate;
+@property (assign, nonatomic) NSUInteger tag;
+@property (assign, nonatomic) id<TDBInterfaceDelegate> delegate;
 
-
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil andTag:(NSInteger)tag;
 - (void)setupWithImage:(UIImage *)image andText:(NSString *)text;
 - (void)showButtons;
+
+@end
+
+@protocol TDBInterfaceDelegate <NSObject>
+
+- (void)didPressButton:(TDBInterface *)interface;
 
 @end

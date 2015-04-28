@@ -7,22 +7,30 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <StyledPageControl.h>
+#import "TDBInterface.h"
 
-@interface TDBWalkthroughViewController : UIViewController <UIScrollViewDelegate>
+@protocol TDBWalkthroughViewControllerDelegate;
+
+@interface TDBWalkthroughViewController : UIViewController <UIScrollViewDelegate, TDBInterfaceDelegate>
 
 @property (strong, nonatomic) UIScrollView *scrollView;
-@property (strong, nonatomic) UIPageControl *pageControl;
+@property (readonly, nonatomic) StyledPageControl *pageControl;
+@property (assign, nonatomic) id<TDBWalkthroughViewControllerDelegate> delegate;
 
+@property (assign, nonatomic) BOOL rounderCorners;
 
-#pragma mark - Setup Methods
+- (void)addPageWithImage:(UIImage *)image andDescription:(NSString *)description;
+- (void)addPageWithVideoFileName:(NSString *)videoFileName andDescription:(NSString *)description;
 
-- (void)setupWithClassName:(NSString *)className
-                   nibName:(NSString *)nibName
-                    images:(NSArray *)images
-              descriptions:(NSArray *)descriptions;
+#pragma mark - Setup
 
-- (void)setupForSlideTypes:(NSArray *)slideTypes
-       usingVideoFileNames:(NSArray *)videoFileNames
-                 andImages:(NSArray *)images;
+- (void)finishSetup;
+
+@end
+
+@protocol TDBWalkthroughViewControllerDelegate <NSObject>
+
+- (void)didPressButtonWithTag:(NSInteger)tag;
 
 @end

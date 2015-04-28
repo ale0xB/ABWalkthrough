@@ -18,19 +18,32 @@
 //@property (strong, nonatomic) IBOutlet UIButton *getStarted;
 //@property (strong, nonatomic) IBOutlet UIButton *signIn;
 //@property (strong, nonatomic) IBOutlet UIButton *signUp;
-@property (strong, nonatomic) IBOutlet UIButton *signInWithFacebook;
+@property (strong, nonatomic) IBOutlet UIButton *button;
 
 @end
 
 @implementation TDBInterface
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil andTag:(NSInteger)tag
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibNameOrNil bundle:nil];
     if (self) {
         // Custom initialization
+        _tag = tag;
     }
     return self;
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    [NSException raise:@"NSInvalidInit" format:@"Must use the designated initialiser for this class"];
+    return nil;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    [NSException raise:@"NSInvalidInit" format:@"Must use the designated initialiser for this class"];
+    return nil;
 }
 
 - (void)viewDidLoad
@@ -61,17 +74,9 @@
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageView.image = self.image;
     
-    
     // buttons
-//    self.getStarted.tag = 0;
-//    self.signIn.tag = 1;
-//    self.signUp.tag = 2;
-//    self.signInWithFacebook.tag = 3;
-//    
-//    self.getStarted.hidden = YES;
-//    self.signIn.hidden = YES;
-//    self.signUp.hidden = YES;
-    self.signInWithFacebook.hidden = YES;
+    self.button.hidden = YES;
+    [self.button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)didReceiveMemoryWarning
@@ -90,28 +95,29 @@
 
 - (void)showButtons
 {
-//    if (!self.getStarted.hidden) return;
-//    
-//    self.getStarted.hidden = NO;
-//    self.signIn.hidden = NO;
-//    self.signUp.hidden = NO;
-    self.signInWithFacebook.hidden = NO;
-//
-//    self.getStarted.alpha = 0;
-//    self.signIn.alpha = 0;
-//    self.signUp.alpha = 0;
-    self.signInWithFacebook.alpha = 0;
+    if (!self.button.hidden) {
+        return;
+    }
+    
+    self.button.hidden = NO;
+    self.button.alpha = 0;
     
     [UIView animateWithDuration:0.3
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-//                         self.getStarted.alpha = 1;
-//                         self.signIn.alpha = 1;
-//                         self.signUp.alpha = 1;
-                         self.signInWithFacebook.alpha = 1;
+                         self.button.alpha = 1;
                      }
                      completion:nil];
+}
+
+#pragma mark - actions
+
+- (IBAction)buttonPressed:(UIButton *)sender
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didPressButton:)]) {
+        [self.delegate didPressButton:self];
+    }
 }
 
 @end

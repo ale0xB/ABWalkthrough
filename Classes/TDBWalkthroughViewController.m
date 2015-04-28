@@ -6,21 +6,41 @@
 //  Copyright (c) 2014 3dB. All rights reserved.
 //
 
-#import "TDBWalkthrough.h"
 #import "TDBWalkThroughViewController.h"
 #import "TDBInterface.h"
-#import "TDBSimpleWhite.h"
 #import "ABVideoLoopViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 
 @interface TDBWalkthroughViewController ()
 
 @property (strong, nonatomic) NSMutableArray *viewControllers;
 @property (strong, nonatomic) NSMutableArray *videoPlayers;
+@property (strong, nonatomic) NSMutableArray *descriptions;
 
+@property (strong, nonatomic) StyledPageControl *pageControl;
 @end
 
 @implementation TDBWalkthroughViewController
+
+CGFloat getFrameHeight(TDBWalkthroughViewController *object)
+{
+    static CGFloat height;
+    if (!height) {
+        height = CGRectGetHeight(object.view.frame);
+    }
+    return height;
+}
+
+CGFloat getFrameWidth(TDBWalkthroughViewController *object)
+{
+    static CGFloat width;
+    if (!width) {
+        width = CGRectGetWidth(object.view.frame);
+    }
+    return width;
+}
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -54,85 +74,73 @@
     [super didReceiveMemoryWarning];
 }
 
+#pragma mark - Page Addition
+
+- (void)addPageWithImage:(UIImage *)image andDescription:(NSString *)description;
+{
+    NSParameterAssert(image);
+    
+    CGFloat width = getFrameWidth(self);
+    CGFloat height = getFrameHeight(self);
+    
+    NSUInteger indexToAdd = [self.viewControllers count];
+    TDBInterface *imageController = [[TDBInterface alloc] initWithNibName:@"TDBSimpleWhite" andTag:indexToAdd];
+    [imageController setupWithImage:image andText:nil];
+    [imageController setDelegate:self];
+    imageController.view.frame = CGRectMake(width * indexToAdd, 0, width, height);
+    [self.scrollView addSubview:imageController.view];
+    [self.viewControllers addObject:imageController];
+
+    if (description) {
+        [self.descriptions addObject:description];
+    }
+}
+
+- (void)addPageWithVideoFileName:(NSString *)videoFileName andDescription:(NSString *)description;
+{
+    NSParameterAssert(videoFileName);
+    
+    CGFloat width = getFrameWidth(self);
+    CGFloat height = getFrameHeight(self);
+    
+    NSUInteger indexToAdd = [self.viewControllers count];
+    ABVideoLoopViewController *playerViewController = [[ABVideoLoopViewController alloc] initWithNibName:nil bundle:nil];
+    playerViewController.resFileName = videoFileName;
+    playerViewController.view.frame = CGRectMake(width * indexToAdd, 0, width, height);
+    [self.scrollView addSubview:playerViewController.view];
+    [self.viewControllers addObject:playerViewController];
+}
+
 
 #pragma mark - Setup Methods
 
-- (void)setupWithClassName:(NSString *)className nibName:(NSString *)nibName images:(NSArray *)images descriptions:(NSArray *)descriptions
+- (void)finishSetup
 {
-    // Setup ScrollView
-    CGFloat width = self.view.frame.size.width;
-    CGFloat height = self.view.frame.size.height;
+    CGFloat width = getFrameWidth(self);
+    CGFloat height = getFrameHeight(self);
     
-    NSInteger nbSlides = MAX(images.count, descriptions.count);
-    
-    for (NSInteger i = 0; i < nbSlides; i++) {
-        TDBInterface *slide = [[NSClassFromString(className) alloc] initWithNibName:nibName bundle:nil];
-    
-        NSString *text = (i >= descriptions.count) ? @"" : [descriptions objectAtIndex:i];
-        UIImage *image = (i >= images.count) ? nil : [images objectAtIndex:i];
-        [slide setupWithImage:image andText:text];
-        
-        slide.delegate = [[TDBWalkthrough sharedInstance] delegate];
-        
-        slide.view.frame = CGRectMake(width * i, 0, width, height);
-        
-        [self.scrollView addSubview:slide.view];
-        
-        [self.viewControllers addObject:slide];
-    }
-    
-    self.scrollView.contentSize = CGSizeMake(width * nbSlides, height);
-    
+    self.scrollView.contentSize = CGSizeMake(width * [self.viewControllers count], height);
     
     // Adding Page Control
-    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(100, 518, 120, 30)];
-    self.pageControl.numberOfPages = nbSlides;
-    self.pageControl.currentPage = 0;
-    self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-    self.pageControl.currentPageIndicatorTintColor = [UIColor darkGrayColor];
-    
     [self.view addSubview:self.pageControl];
 }
 
-- (void)setupForSlideTypes:(NSArray *)slideTypes usingVideoFileNames:(NSArray *)videoFileNames andImages:(NSArray *)images
+
+#pragma pageControl
+- (StyledPageControl *)pageControl
 {
-    CGFloat width = CGRectGetWidth(self.view.frame);
-    CGFloat heigth = CGRectGetHeight(self.view.frame);
-    
-    NSInteger slidesNumber = slideTypes.count;
-    NSInteger slideIndex, videoIndex, imageIndex;
-    slideIndex = videoIndex = imageIndex = 0;
-    for (NSNumber *collectionType in slideTypes) {
-        ABWalkthroughSlideType slideType = collectionType.integerValue;
-        if (slideType == ABWalkthroughSlideTypeVideo) {
-            NSString *videoFileName = videoFileNames[videoIndex++];
-            ABVideoLoopViewController *playerViewController = [[ABVideoLoopViewController alloc] initWithNibName:nil bundle:nil];
-            playerViewController.resFileName = videoFileName;
-            playerViewController.view.frame = CGRectMake(width * slideIndex, 0, width, heigth);
-            [self.scrollView addSubview:playerViewController.view];
-            [self.viewControllers addObject:playerViewController];
-        } else if (slideType == ABWalkthroughSlideTypePicture) {
-            UIImage *image = images[imageIndex++];
-            TDBSimpleWhite *imageController = [[TDBSimpleWhite alloc] initWithNibName:@"TDBSimpleWhite" bundle:nil];
-            [imageController setupWithImage:image andText:nil];
-            [imageController setDelegate:[[TDBWalkthrough sharedInstance] delegate]];
-            imageController.view.frame = CGRectMake(width * slideIndex, 0, width, heigth);
-            [self.scrollView addSubview:imageController.view];
-            [self.viewControllers addObject:imageController];
-        }
-        slideIndex++;
+    if (!_pageControl) {
+        CGFloat pageControlHeigth = CGRectGetHeight(self.view.frame) * 0.80;
+        _pageControl = [[StyledPageControl alloc] initWithFrame:CGRectMake(100, pageControlHeigth, 120, 30)];
+        [_pageControl setNumberOfPages:[self.viewControllers count]];
+        [_pageControl setPageControlStyle:PageControlStyleStrokedCircle];
+        [_pageControl setCurrentPage:(int)0];
+        [_pageControl setCoreNormalColor:[UIColor clearColor]];
+        [_pageControl setCoreSelectedColor:[UIColor whiteColor]];
+        [_pageControl setStrokeNormalColor:[UIColor whiteColor]];
+        [_pageControl setStrokeSelectedColor:[UIColor whiteColor]];
     }
-    self.scrollView.contentSize = CGSizeMake(width * slidesNumber, heigth);
-    
-    // Adding Page Control
-    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(100, 518, 120, 30)];
-    self.pageControl.numberOfPages = slidesNumber;
-    self.pageControl.currentPage = 0;
-//    self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-//    self.pageControl.currentPageIndicatorTintColor = [UIColor darkGrayColor];
-    
-    [self.view addSubview:self.pageControl];
-    
+    return _pageControl;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -140,9 +148,9 @@
 - (void)scrollViewDidScroll:(UIScrollView *)sender
 {
     // Update the page when more than 50% of the previous/next page is visible
-    CGFloat pageWidth = self.scrollView.frame.size.width;
-    NSInteger page = floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    self.pageControl.currentPage = page;
+    CGFloat width = getFrameWidth(self);
+    NSInteger page = floor((self.scrollView.contentOffset.x - width / 2) / width) + 1;
+    [self.pageControl setCurrentPage:(int)page];
 }
 
 
@@ -153,5 +161,23 @@
     }
 }
 
+#pragma mark - TDBInterfaceDelegate
+- (void)didPressButton:(TDBInterface *)interface
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didPressButtonWithTag:)]) {
+        [self.delegate didPressButtonWithTag:interface.tag];
+    }
+}
+
+- (void)setRounderCorners:(BOOL)rounderCorners
+{
+    if (rounderCorners) {
+        self.view.layer.cornerRadius = 5;
+        self.view.layer.masksToBounds = YES;
+    } else {
+        self.view.layer.cornerRadius = 1;
+        self.view.layer.masksToBounds = NO;
+    }
+}
 
 @end
