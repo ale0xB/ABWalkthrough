@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TDBSimpleWhite">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ABInterface">
             <connections>
                 <outlet property="button" destination="jIY-dJ-2Mh" id="KD2-uY-aAP"/>
                 <outlet property="desc" destination="6JK-53-jbw" id="pDC-nh-1hh"/>

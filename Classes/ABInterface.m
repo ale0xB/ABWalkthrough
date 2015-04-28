@@ -1,14 +1,14 @@
 //
-//  TDBSimpleWhite.m
-//  TDBWalkthrough
+//  ABInterface.m
+//  ABWalkthroughViewController
 //
 //  Created by Titouan Van Belle on 24/04/14.
 //  Copyright (c) 2014 3dB. All rights reserved.
 //
 
-#import "TDBInterface.h"
+#import "ABInterface.h"
 
-@interface TDBInterface ()
+@interface ABInterface ()
 
 @property (strong, nonatomic) NSString *text;
 @property (strong, nonatomic) UIImage *image;
@@ -22,7 +22,7 @@
 
 @end
 
-@implementation TDBInterface
+@implementation ABInterface
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil andTag:(NSInteger)tag
 {

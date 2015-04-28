@@ -1,6 +1,6 @@
 //
-//  TDBWalkThroughViewController.h
-//  TDBWalkthrough
+//  ABWalkthroughViewController.h
+//  ABWalkthrough
 //
 //  Created by Titouan Van Belle on 24/04/14.
 //  Copyright (c) 2014 3dB. All rights reserved.
@@ -8,15 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import <StyledPageControl.h>
-#import "TDBInterface.h"
+#import "ABInterface.h"
 
-@protocol TDBWalkthroughViewControllerDelegate;
+@protocol ABWalkthroughViewControllerDelegate;
 
-@interface TDBWalkthroughViewController : UIViewController <UIScrollViewDelegate, TDBInterfaceDelegate>
+@interface ABWalkthroughViewController : UIViewController <UIScrollViewDelegate, ABInterfaceDelegate>
 
 @property (strong, nonatomic) UIScrollView *scrollView;
 @property (readonly, nonatomic) StyledPageControl *pageControl;
-@property (assign, nonatomic) id<TDBWalkthroughViewControllerDelegate> delegate;
+@property (assign, nonatomic) id<ABWalkthroughViewControllerDelegate> delegate;
 
 @property (assign, nonatomic) BOOL rounderCorners;
 
@@ -29,7 +29,7 @@
 
 @end
 
-@protocol TDBWalkthroughViewControllerDelegate <NSObject>
+@protocol ABWalkthroughViewControllerDelegate <NSObject>
 
 - (void)didPressButtonWithTag:(NSInteger)tag;
 

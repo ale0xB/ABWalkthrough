@@ -1,18 +1,18 @@
 //
-//  TDBWalkThroughViewController.m
-//  TDBWalkthrough
+//  ABWalkthroughViewController.m
+//  ABWalkthrough
 //
 //  Created by Titouan Van Belle on 24/04/14.
 //  Copyright (c) 2014 3dB. All rights reserved.
 //
 
-#import "TDBWalkThroughViewController.h"
-#import "TDBInterface.h"
+#import "ABWalkthroughViewController.h"
+#import "ABInterface.h"
 #import "ABVideoLoopViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 
-@interface TDBWalkthroughViewController ()
+@interface ABWalkthroughViewController ()
 
 @property (strong, nonatomic) NSMutableArray *viewControllers;
 @property (strong, nonatomic) NSMutableArray *videoPlayers;
@@ -21,9 +21,9 @@
 @property (strong, nonatomic) StyledPageControl *pageControl;
 @end
 
-@implementation TDBWalkthroughViewController
+@implementation ABWalkthroughViewController
 
-CGFloat getFrameHeight(TDBWalkthroughViewController *object)
+CGFloat getFrameHeight(ABWalkthroughViewController *object)
 {
     static CGFloat height;
     if (!height) {
@@ -32,7 +32,7 @@ CGFloat getFrameHeight(TDBWalkthroughViewController *object)
     return height;
 }
 
-CGFloat getFrameWidth(TDBWalkthroughViewController *object)
+CGFloat getFrameWidth(ABWalkthroughViewController *object)
 {
     static CGFloat width;
     if (!width) {
@@ -84,7 +84,7 @@ CGFloat getFrameWidth(TDBWalkthroughViewController *object)
     CGFloat height = getFrameHeight(self);
     
     NSUInteger indexToAdd = [self.viewControllers count];
-    TDBInterface *imageController = [[TDBInterface alloc] initWithNibName:@"TDBSimpleWhite" andTag:indexToAdd];
+    ABInterface *imageController = [[ABInterface alloc] initWithNibName:@"ABSimpleWhite" andTag:indexToAdd];
     [imageController setupWithImage:image andText:nil];
     [imageController setDelegate:self];
     imageController.view.frame = CGRectMake(width * indexToAdd, 0, width, height);
@@ -157,12 +157,12 @@ CGFloat getFrameWidth(TDBWalkthroughViewController *object)
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     if (self.pageControl.currentPage == self.pageControl.numberOfPages - 1) {
-        [(TDBInterface *)self.viewControllers[self.pageControl.currentPage] showButtons];
+        [(ABInterface *)self.viewControllers[self.pageControl.currentPage] showButtons];
     }
 }
 
-#pragma mark - TDBInterfaceDelegate
-- (void)didPressButton:(TDBInterface *)interface
+#pragma mark - ABInterfaceDelegate
+- (void)didPressButton:(ABInterface *)interface
 {
     if (self.delegate && [self.delegate respondsToSelector:@selector(didPressButtonWithTag:)]) {
         [self.delegate didPressButtonWithTag:interface.tag];
