@@ -12,13 +12,34 @@
 #import <QuartzCore/QuartzCore.h>
 
 
+typedef NS_ENUM(NSInteger, ABWalkthroughSlideType) {
+    ABWalkthroughSlideTypePicture,
+    ABWalkthroughSlideTypeVideo
+};
+
+typedef NS_ENUM(NSInteger, ABWalkthroughScrollDirection) {
+    ABWalkthroughScrollDirectionLeft,
+    ABWalkthroughScrollDirectionRight
+};
+
+
+static CGFloat const ABPercentageMultiplier = 0.4;
+static CGFloat const ABMotionFrameOffset    = 15.0;
+static CGFloat const ABMotionMagnitude      = ABMotionFrameOffset / 3.0;
+
+
 @interface ABWalkthroughViewController ()
 
 @property (strong, nonatomic) NSMutableArray *viewControllers;
-@property (strong, nonatomic) NSMutableArray *videoPlayers;
 @property (strong, nonatomic) NSMutableArray *descriptions;
+@property (strong, nonatomic) NSMutableArray *slideTypes;
+@property (strong, nonatomic) NSMutableArray *videoFileNames;
+@property (strong, nonatomic) NSMutableArray *images;
 
 @property (strong, nonatomic) StyledPageControl *pageControl;
+
+@property (assign, nonatomic) NSInteger otherPageNumber;
+@property (assign, nonatomic) CGFloat lastContentOffset;
 @end
 
 @implementation ABWalkthroughViewController
@@ -47,12 +68,11 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
-        self.scrollView.pagingEnabled = YES;
-        self.scrollView.showsHorizontalScrollIndicator = NO;
-        self.scrollView.delegate = self;
-        [self.view addSubview:self.scrollView];
         _viewControllers = [NSMutableArray new];
+        _descriptions = [NSMutableArray new];
+        _slideTypes = [NSMutableArray new];
+        _videoFileNames = [NSMutableArray new];
+        _images = [NSMutableArray new];
     }
     return self;
 }
@@ -60,12 +80,22 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.viewControllers = [[NSMutableArray alloc] init];
+    
+    self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.pagingEnabled = YES;
+    self.scrollView.bounces = NO;
+    self.scrollView.delegate = self;
+    
+    [self.view addSubview:self.scrollView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(walkthroughViewControllerDidAppear:)]) {
+        [self.delegate walkthroughViewControllerDidAppear:self];
+    }
 }
 
 
@@ -80,16 +110,8 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
 {
     NSParameterAssert(image);
     
-    CGFloat width = getFrameWidth(self);
-    CGFloat height = getFrameHeight(self);
-    
-    NSUInteger indexToAdd = [self.viewControllers count];
-    ABInterface *imageController = [[ABInterface alloc] initWithNibName:@"ABSimpleWhite" andTag:indexToAdd];
-    [imageController setupWithImage:image andText:nil];
-    [imageController setDelegate:self];
-    imageController.view.frame = CGRectMake(width * indexToAdd, 0, width, height);
-    [self.scrollView addSubview:imageController.view];
-    [self.viewControllers addObject:imageController];
+    [self.images addObject:image];
+    [self.slideTypes addObject:@(ABWalkthroughSlideTypePicture)];
 
     if (description) {
         [self.descriptions addObject:description];
@@ -99,16 +121,13 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
 - (void)addPageWithVideoFileName:(NSString *)videoFileName andDescription:(NSString *)description;
 {
     NSParameterAssert(videoFileName);
+    [self.videoFileNames addObject:videoFileName];
+    [self.slideTypes addObject:@(ABWalkthroughSlideTypeVideo)];
     
-    CGFloat width = getFrameWidth(self);
-    CGFloat height = getFrameHeight(self);
+    if (description) {
+        [self.descriptions addObject:description];
+    }
     
-    NSUInteger indexToAdd = [self.viewControllers count];
-    ABVideoLoopViewController *playerViewController = [[ABVideoLoopViewController alloc] initWithNibName:nil bundle:nil];
-    playerViewController.resFileName = videoFileName;
-    playerViewController.view.frame = CGRectMake(width * indexToAdd, 0, width, height);
-    [self.scrollView addSubview:playerViewController.view];
-    [self.viewControllers addObject:playerViewController];
 }
 
 
@@ -119,7 +138,53 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
     CGFloat width = getFrameWidth(self);
     CGFloat height = getFrameHeight(self);
     
+    NSInteger slideIndex, videoIndex, imageIndex;
+    slideIndex = videoIndex = imageIndex = 0;
+    
+    for (NSNumber *collectionType in self.slideTypes) {
+        ABWalkthroughSlideType slideType = collectionType.integerValue;
+        UIViewController *viewController;
+        if (slideType == ABWalkthroughSlideTypeVideo) {
+            NSString *videoFileName = self.videoFileNames[videoIndex++];
+            ABVideoLoopViewController *playerViewController = [[ABVideoLoopViewController alloc] initWithNibName:nil bundle:nil];
+            playerViewController.resFileName = videoFileName;
+            viewController = playerViewController;
+//            playerViewController.view.frame = CGRectMake(width * slideIndex, 0, width, height);
+//            [self.scrollView addSubview:playerViewController.view];
+            [self.viewControllers addObject:playerViewController];
+        } else if (slideType == ABWalkthroughSlideTypePicture) {
+            UIImage *image = self.images[imageIndex++];
+            ABInterface *imageController = [[ABInterface alloc] initWithNibName:@"ABSimpleWhite" andTag:slideIndex];
+            [imageController setupWithImage:image andText:nil];
+            [imageController setDelegate:self];
+            viewController = imageController;
+//            imageController.view.frame = CGRectMake(width * slideIndex, 0, width, height);
+//            [self.scrollView addSubview:imageController.view];
+            [self.viewControllers addObject:imageController];
+        }
+        
+        CGFloat diff = 0.0f;
+        UIView *subView = [[UIView alloc] initWithFrame:CGRectMake(width * slideIndex, 0.0f, width, height)];
+        UIScrollView *internalScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(diff, 0.0f, width - (diff * 2.0), height)];
+        internalScrollView.scrollEnabled = NO;
+        
+        [viewController.view setFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth(internalScrollView.frame) + ABMotionFrameOffset, CGRectGetHeight(internalScrollView.frame) + ABMotionFrameOffset)];
+        [self addMotionEffectToView:viewController.view magnitude:ABMotionMagnitude];
+        
+        internalScrollView.tag = (slideIndex + 1) * 10;
+        viewController.view.tag = (slideIndex + 1) * 1000;
+        
+        [internalScrollView addSubview:viewController.view];
+        [subView addSubview:internalScrollView];
+        
+        [self.scrollView addSubview:subView];
+        
+        slideIndex++;
+    }
+
+    
     self.scrollView.contentSize = CGSizeMake(width * [self.viewControllers count], height);
+    
     
     // Adding Page Control
     [self.view addSubview:self.pageControl];
@@ -145,17 +210,71 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
 
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewDidScroll:(UIScrollView *)sender
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    // Update the page when more than 50% of the previous/next page is visible
+    ABWalkthroughScrollDirection scrollDirection;
+    CGFloat multiplier = 1.0;
     CGFloat width = getFrameWidth(self);
-    NSInteger page = floor((self.scrollView.contentOffset.x - width / 2) / width) + 1;
-    [self.pageControl setCurrentPage:(int)page];
+    
+    CGFloat offset = scrollView.contentOffset.x;
+    
+    if (self.lastContentOffset > offset) {
+        scrollDirection = ABWalkthroughScrollDirectionRight;
+        if (self.pageControl.currentPage > 0)  {
+            if (offset > (self.pageControl.currentPage - 1) * width) {
+                self.otherPageNumber = self.pageControl.currentPage + 1;
+                multiplier = 1.0;
+            } else {
+                self.otherPageNumber = self.pageControl.currentPage - 1;
+                multiplier = -1.0;
+            }
+        }
+    } else if (self.lastContentOffset < offset) {
+        scrollDirection = ABWalkthroughScrollDirectionLeft;
+        if (offset < (self.pageControl.currentPage - 1) * width) {
+            self.otherPageNumber = self.pageControl.currentPage - 1;
+            multiplier = -1.0;
+        } else {
+            self.otherPageNumber = self.pageControl.currentPage + 1;
+            multiplier = 1.0;
+        }
+    }
+    
+    self.lastContentOffset = offset;
+    
+    UIScrollView *internalScrollView = (UIScrollView *)[scrollView viewWithTag:(self.pageControl.currentPage + 1) * 10];
+    UIScrollView *otherScrollView = (UIScrollView *)[scrollView viewWithTag:(self.otherPageNumber + 1) * 10];
+    
+    if (internalScrollView) {
+        NSAssert([internalScrollView isKindOfClass:[UIScrollView class]], @"internalScrollView must be of class UIScrollView");
+        internalScrollView.contentOffset = CGPointMake(-ABPercentageMultiplier * (offset - (width * self.pageControl.currentPage)), 0.0f);
+    }
+    
+    if (otherScrollView) {
+        otherScrollView.contentOffset = CGPointMake(multiplier * ABPercentageMultiplier * width - (ABPercentageMultiplier * (offset - (width * self.pageControl.currentPage))), 0.0f);
+        NSAssert([otherScrollView isKindOfClass:[UIScrollView class]], @"otherScrollView must be of class UIScrollView");
+    }
+
 }
 
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    UIScrollView *internalScrollView = (UIScrollView *)[scrollView viewWithTag:(self.pageControl.currentPage + 1) * 10];
+    UIScrollView *otherScrollView = (UIScrollView *)[scrollView viewWithTag:(self.otherPageNumber + 1) * 10];
+    
+    NSAssert([internalScrollView isKindOfClass:[UIScrollView class]], @"internalScrollView must be of class UIScrollView");
+    NSAssert([otherScrollView isKindOfClass:[UIScrollView class]], @"otherScrollView must be of class UIScrollView");
+    
+    internalScrollView.contentOffset = CGPointMake(0.0f, 0.0f);
+    otherScrollView.contentOffset = CGPointMake(0.0f, 0.0f);
+    
+    // Update the page when more than 50% of the previous/next page is visible
+    NSInteger page = self.scrollView.contentOffset.x / getFrameWidth(self);
+    if (self.delegate && [self.delegate respondsToSelector:@selector(walkthroughViewController:didScrollToSlideWithTag:)]) {
+        [self.delegate walkthroughViewController:self didScrollToSlideWithTag:page];
+    }
+    [self.pageControl setCurrentPage:(int)page];
     if (self.pageControl.currentPage == self.pageControl.numberOfPages - 1) {
         [(ABInterface *)self.viewControllers[self.pageControl.currentPage] showButtons];
     }
@@ -164,11 +283,12 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
 #pragma mark - ABInterfaceDelegate
 - (void)didPressButton:(ABInterface *)interface
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didPressButtonWithTag:)]) {
-        [self.delegate didPressButtonWithTag:interface.tag];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(walkthroughViewController:didPressButtonWithTag:)]) {
+        [self.delegate walkthroughViewController:self didPressButtonWithTag:interface.tag];
     }
 }
 
+#pragma mark - Effects
 - (void)setRounderCorners:(BOOL)rounderCorners
 {
     if (rounderCorners) {
@@ -178,6 +298,20 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
         self.view.layer.cornerRadius = 1;
         self.view.layer.masksToBounds = NO;
     }
+}
+
+- (void)addMotionEffectToView:(UIView *)view magnitude:(CGFloat)magnitude
+{
+    UIInterpolatingMotionEffect *xMotion = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+    UIInterpolatingMotionEffect *yMotion = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+    xMotion.minimumRelativeValue = @(-magnitude);
+    xMotion.maximumRelativeValue = @(magnitude);
+    yMotion.minimumRelativeValue = @(-magnitude);
+    yMotion.maximumRelativeValue = @(magnitude);
+    
+    UIMotionEffectGroup *motionGroup = [[UIMotionEffectGroup alloc] init];
+    motionGroup.motionEffects = @[xMotion, yMotion];
+    [view addMotionEffect:motionGroup];
 }
 
 @end

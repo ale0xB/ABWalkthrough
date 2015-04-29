@@ -27,8 +27,8 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jIY-dJ-2Mh">
-                    <rect key="frame" x="54" y="60" width="213" height="210"/>
-                    <state key="normal" image="SignInButton">
+                    <rect key="frame" x="73" y="138" width="175" height="47"/>
+                    <state key="normal" image="AllowAccess">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </state>
@@ -41,7 +41,7 @@
         </view>
     </objects>
     <resources>
-        <image name="SignInButton" width="729" height="729"/>
+        <image name="AllowAccess" width="606" height="145"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

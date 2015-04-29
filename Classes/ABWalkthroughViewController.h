@@ -31,6 +31,8 @@
 
 @protocol ABWalkthroughViewControllerDelegate <NSObject>
 
-- (void)didPressButtonWithTag:(NSInteger)tag;
+- (void)walkthroughViewController:(ABWalkthroughViewController *)walkthroughViewController didPressButtonWithTag:(NSInteger)tag;
+- (void)walkthroughViewController:(ABWalkthroughViewController *)walkthroughViewController didScrollToSlideWithTag:(NSInteger)tag;
+- (void)walkthroughViewControllerDidAppear:(ABWalkthroughViewController *)walkthroughViewController;
 
 @end
