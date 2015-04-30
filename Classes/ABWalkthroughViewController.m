@@ -9,6 +9,7 @@
 #import "ABWalkthroughViewController.h"
 #import "ABInterface.h"
 #import "ABVideoLoopViewController.h"
+#import <AMPopTip.h>
 #import <QuartzCore/QuartzCore.h>
 
 
@@ -128,6 +129,18 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
         [self.descriptions addObject:description];
     }
     
+}
+
+#pragma Tooltip
+
+- (void)showTooltipAtPageIndex:(NSUInteger)index withText:(NSString *)text
+{
+    AMPopTip *popTip = [AMPopTip popTip];
+    popTip.shouldDismissOnTapOutside = YES;
+    [popTip setFont:[UIFont fontWithName:@"Avenir-Medium" size:12.0f]];
+    [popTip setTextColor:[UIColor blackColor]];
+    [popTip setPopoverColor:[UIColor whiteColor]];
+    [popTip showText:text direction:AMPopTipDirectionUp maxWidth:100.0f inView:[self.viewControllers[index] view] fromFrame:self.pageControl.frame];
 }
 
 

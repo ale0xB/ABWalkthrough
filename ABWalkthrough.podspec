@@ -18,5 +18,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency 'AVAnimator'
-  
+  s.dependency 'AMPopTip'
+  s.dependency 'StyledPageControl'  
 end
