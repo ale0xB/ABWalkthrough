@@ -26,7 +26,6 @@ typedef NS_ENUM(NSInteger, ABWalkthroughScrollDirection) {
 
 static CGFloat const ABPercentageMultiplier = 0.4;
 static CGFloat const ABMotionFrameOffset    = 15.0;
-static CGFloat const ABMotionMagnitude      = ABMotionFrameOffset / 3.0;
 
 
 @interface ABWalkthroughViewController ()
@@ -94,6 +93,9 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    if (self.showInitialAnimation) {
+        [self performInitialAnimation];
+    }
     if (self.delegate && [self.delegate respondsToSelector:@selector(walkthroughViewControllerDidAppear:)]) {
         [self.delegate walkthroughViewControllerDidAppear:self];
     }
@@ -179,7 +181,7 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
         internalScrollView.scrollEnabled = NO;
         
         [viewController.view setFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth(internalScrollView.frame) + ABMotionFrameOffset, CGRectGetHeight(internalScrollView.frame) + ABMotionFrameOffset)];
-        [self addMotionEffectToView:viewController.view magnitude:ABMotionMagnitude];
+//        [self addMotionEffectToView:viewController.view magnitude:ABMotionMagnitude];
         
         internalScrollView.tag = (slideIndex + 1) * 10;
         viewController.view.tag = (slideIndex + 1) * 1000;
@@ -311,18 +313,32 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
     }
 }
 
-- (void)addMotionEffectToView:(UIView *)view magnitude:(CGFloat)magnitude
+#pragma mark - Animation
+- (void)performInitialAnimation
 {
-    UIInterpolatingMotionEffect *xMotion = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-    UIInterpolatingMotionEffect *yMotion = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-    xMotion.minimumRelativeValue = @(-magnitude);
-    xMotion.maximumRelativeValue = @(magnitude);
-    yMotion.minimumRelativeValue = @(-magnitude);
-    yMotion.maximumRelativeValue = @(magnitude);
-    
-    UIMotionEffectGroup *motionGroup = [[UIMotionEffectGroup alloc] init];
-    motionGroup.motionEffects = @[xMotion, yMotion];
-    [view addMotionEffect:motionGroup];
+    CGPoint initialOffset = self.scrollView.contentOffset;
+    [UIView animateWithDuration:0.4 animations:^{
+        [self.scrollView setContentOffset:CGPointMake(initialOffset.x + 50, initialOffset.y)];
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.2 animations:^{
+            [self.scrollView setContentOffset:initialOffset];
+        } completion:nil];
+    }];
 }
+
+//
+//- (void)addMotionEffectToView:(UIView *)view magnitude:(CGFloat)magnitude
+//{
+//    UIInterpolatingMotionEffect *xMotion = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+//    UIInterpolatingMotionEffect *yMotion = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+//    xMotion.minimumRelativeValue = @(-magnitude);
+//    xMotion.maximumRelativeValue = @(magnitude);
+//    yMotion.minimumRelativeValue = @(-magnitude);
+//    yMotion.maximumRelativeValue = @(magnitude);
+//    
+//    UIMotionEffectGroup *motionGroup = [[UIMotionEffectGroup alloc] init];
+//    motionGroup.motionEffects = @[xMotion, yMotion];
+//    [view addMotionEffect:motionGroup];
+//}
 
 @end

@@ -19,6 +19,7 @@
 @property (assign, nonatomic) id<ABWalkthroughViewControllerDelegate> delegate;
 
 @property (assign, nonatomic) BOOL rounderCorners;
+@property (assign, nonatomic) BOOL showInitialAnimation;
 
 - (void)addPageWithImage:(UIImage *)image andDescription:(NSString *)description;
 - (void)addPageWithVideoFileName:(NSString *)videoFileName andDescription:(NSString *)description;
