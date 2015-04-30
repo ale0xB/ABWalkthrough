@@ -205,7 +205,7 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
 - (StyledPageControl *)pageControl
 {
     if (!_pageControl) {
-        CGFloat pageControlHeigth = CGRectGetHeight(self.view.frame) * 0.80;
+        CGFloat pageControlHeigth = CGRectGetHeight(self.view.frame) * 0.90;
         _pageControl = [[StyledPageControl alloc] initWithFrame:CGRectMake(100, pageControlHeigth, 120, 30)];
         [_pageControl setNumberOfPages:[self.viewControllers count]];
         [_pageControl setPageControlStyle:PageControlStyleStrokedCircle];
@@ -214,6 +214,7 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
         [_pageControl setCoreSelectedColor:[UIColor whiteColor]];
         [_pageControl setStrokeNormalColor:[UIColor whiteColor]];
         [_pageControl setStrokeSelectedColor:[UIColor whiteColor]];
+        [_pageControl setStrokeWidth:1];
     }
     return _pageControl;
 }
