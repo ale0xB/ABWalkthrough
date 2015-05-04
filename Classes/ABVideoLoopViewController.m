@@ -64,7 +64,7 @@
     CALayer *mainLayer = self.view.layer;
     CALayer *renderLayer = [[CALayer alloc] init];
     
-    renderLayer.backgroundColor = [UIColor greenColor].CGColor;
+    renderLayer.backgroundColor = [UIColor whiteColor].CGColor;
     renderLayer.masksToBounds = YES;
     
     CGRect rendererFrame = self.view.layer.frame;
