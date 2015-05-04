@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <StyledPageControl.h>
+#import <TAPageControl.h>
 #import "ABInterface.h"
 
 @protocol ABWalkthroughViewControllerDelegate;
@@ -15,7 +15,7 @@
 @interface ABWalkthroughViewController : UIViewController <UIScrollViewDelegate, ABInterfaceDelegate>
 
 @property (strong, nonatomic) UIScrollView *scrollView;
-@property (readonly, nonatomic) StyledPageControl *pageControl;
+@property (readonly, nonatomic) TAPageControl *pageControl;
 @property (assign, nonatomic) id<ABWalkthroughViewControllerDelegate> delegate;
 
 @property (assign, nonatomic) BOOL rounderCorners;

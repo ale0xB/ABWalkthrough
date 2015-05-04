@@ -36,7 +36,7 @@ static CGFloat const ABMotionFrameOffset    = 15.0;
 @property (strong, nonatomic) NSMutableArray *videoFileNames;
 @property (strong, nonatomic) NSMutableArray *images;
 
-@property (strong, nonatomic) StyledPageControl *pageControl;
+@property (strong, nonatomic) TAPageControl *pageControl;
 
 @property (assign, nonatomic) NSInteger otherPageNumber;
 @property (assign, nonatomic) CGFloat lastContentOffset;
@@ -204,19 +204,20 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
 
 
 #pragma pageControl
-- (StyledPageControl *)pageControl
+- (TAPageControl *)pageControl
 {
     if (!_pageControl) {
-        CGFloat pageControlHeigth = CGRectGetHeight(self.view.frame) * 0.90;
-        _pageControl = [[StyledPageControl alloc] initWithFrame:CGRectMake(100, pageControlHeigth, 120, 30)];
+        CGFloat pageControlY = CGRectGetHeight(self.view.frame) * 0.90;
+        _pageControl = [[TAPageControl alloc] initWithFrame:CGRectMake(0, pageControlY, CGRectGetWidth(self.view.frame), 40)];
         [_pageControl setNumberOfPages:[self.viewControllers count]];
-        [_pageControl setPageControlStyle:PageControlStyleStrokedCircle];
-        [_pageControl setCurrentPage:(int)0];
-        [_pageControl setCoreNormalColor:[UIColor clearColor]];
-        [_pageControl setCoreSelectedColor:[UIColor whiteColor]];
-        [_pageControl setStrokeNormalColor:[UIColor whiteColor]];
-        [_pageControl setStrokeSelectedColor:[UIColor whiteColor]];
-        [_pageControl setStrokeWidth:1];
+        [_pageControl setProgressive:YES];
+//        [_pageControl setPageControlStyle:PageControlStyleStrokedCircle];
+//        [_pageControl setCurrentPage:(int)0];
+//        [_pageControl setCoreNormalColor:[UIColor clearColor]];
+//        [_pageControl setCoreSelectedColor:[UIColor whiteColor]];
+//        [_pageControl setStrokeNormalColor:[UIColor whiteColor]];
+//        [_pageControl setStrokeSelectedColor:[UIColor whiteColor]];
+//        [_pageControl setStrokeWidth:1];
     }
     return _pageControl;
 }

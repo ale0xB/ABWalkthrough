@@ -19,5 +19,5 @@ Pod::Spec.new do |s|
 
   s.dependency 'AVAnimator'
   s.dependency 'AMPopTip'
-  s.dependency 'StyledPageControl'  
+  s.dependency 'TAPageControl'  
 end
