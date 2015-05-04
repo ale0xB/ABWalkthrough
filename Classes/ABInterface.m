@@ -64,25 +64,29 @@
     
     CGRect frame = self.desc.frame;
     frame.size.height = expectedLabelSize.height;
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.desc.frame = frame;
-    });    
     
+    self.desc.frame = frame;
     
     // imageview
-    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.imageView.contentMode = UIViewContentModeScaleAspectFill;
     self.imageView.image = self.image;
     
     // buttons
     self.button.hidden = YES;
     [self.button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.view.clipsToBounds = YES;
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
 }
 
 

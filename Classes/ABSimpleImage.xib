@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ABInterface">
+            <connections>
+                <outlet property="button" destination="lvn-me-aiT" id="xxZ-2R-hNq"/>
+                <outlet property="desc" destination="NCN-8i-CBe" id="NUd-hF-VOn"/>
+                <outlet property="imageView" destination="JVI-Lp-fxa" id="nWx-BO-N3d"/>
+                <outlet property="view" destination="iN0-l3-epB" id="9lm-aZ-Fym"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JVI-Lp-fxa">
+                    <rect key="frame" x="0.0" y="0.0" width="605" height="600"/>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lvn-me-aiT">
+                    <rect key="frame" x="215" y="155" width="175" height="47"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="47" id="bhK-tu-3jc"/>
+                        <constraint firstAttribute="width" constant="175" id="l5S-Jz-TUq"/>
+                    </constraints>
+                    <state key="normal" image="AllowAccess">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="layer.cornerRadius" value="2"/>
+                    </userDefinedRuntimeAttributes>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="bhK-tu-3jc"/>
+                            <exclude reference="l5S-Jz-TUq"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="bhK-tu-3jc"/>
+                            <include reference="l5S-Jz-TUq"/>
+                        </mask>
+                    </variation>
+                </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCN-8i-CBe">
+                    <rect key="frame" x="20" y="444" width="280" height="39"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="39" id="SBu-xL-cvW"/>
+                        <constraint firstAttribute="width" constant="280" id="uAs-kr-jai"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="SBu-xL-cvW"/>
+                            <exclude reference="uAs-kr-jai"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="SBu-xL-cvW"/>
+                            <include reference="uAs-kr-jai"/>
+                        </mask>
+                    </variation>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="lvn-me-aiT" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="176" id="03p-g7-Qnk"/>
+                <constraint firstAttribute="centerY" secondItem="JVI-Lp-fxa" secondAttribute="centerY" constant="-8" id="2r4-V2-me2">
+                    <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                </constraint>
+                <constraint firstAttribute="centerX" secondItem="lvn-me-aiT" secondAttribute="centerX" constant="-0.5" id="OLk-Uv-bJl">
+                    <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                </constraint>
+                <constraint firstItem="JVI-Lp-fxa" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="P5n-g4-yea">
+                    <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                </constraint>
+                <constraint firstItem="JVI-Lp-fxa" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="UAS-X0-73q"/>
+                <constraint firstAttribute="centerX" secondItem="JVI-Lp-fxa" secondAttribute="centerX" id="fzC-sX-ygo"/>
+                <constraint firstAttribute="bottom" secondItem="NCN-8i-CBe" secondAttribute="bottom" constant="137" id="kiS-XB-klb"/>
+                <constraint firstAttribute="centerX" secondItem="NCN-8i-CBe" secondAttribute="centerX" id="pmQ-Zm-Sdj"/>
+            </constraints>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="NCN-8i-CBe"/>
+                </mask>
+                <mask key="constraints">
+                    <exclude reference="2r4-V2-me2"/>
+                    <exclude reference="P5n-g4-yea"/>
+                    <exclude reference="UAS-X0-73q"/>
+                    <exclude reference="fzC-sX-ygo"/>
+                    <exclude reference="03p-g7-Qnk"/>
+                    <exclude reference="OLk-Uv-bJl"/>
+                    <exclude reference="kiS-XB-klb"/>
+                    <exclude reference="pmQ-Zm-Sdj"/>
+                </mask>
+            </variation>
+            <variation key="heightClass=regular-widthClass=compact">
+                <mask key="subviews">
+                    <include reference="NCN-8i-CBe"/>
+                </mask>
+                <mask key="constraints">
+                    <include reference="2r4-V2-me2"/>
+                    <include reference="P5n-g4-yea"/>
+                    <include reference="UAS-X0-73q"/>
+                    <include reference="fzC-sX-ygo"/>
+                    <include reference="03p-g7-Qnk"/>
+                    <include reference="OLk-Uv-bJl"/>
+                    <include reference="kiS-XB-klb"/>
+                    <include reference="pmQ-Zm-Sdj"/>
+                </mask>
+            </variation>
+        </view>
+    </objects>
+    <resources>
+        <image name="AllowAccess" width="606" height="145"/>
+    </resources>
+</document>

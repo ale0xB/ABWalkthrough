@@ -166,7 +166,7 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
             [self.viewControllers addObject:playerViewController];
         } else if (slideType == ABWalkthroughSlideTypePicture) {
             UIImage *image = self.images[imageIndex++];
-            ABInterface *imageController = [[ABInterface alloc] initWithNibName:@"ABSimpleWhite" andTag:slideIndex];
+            ABInterface *imageController = [[ABInterface alloc] initWithNibName:@"ABSimpleImage" andTag:slideIndex];
             [imageController setupWithImage:image andText:nil];
             [imageController setDelegate:self];
             viewController = imageController;
