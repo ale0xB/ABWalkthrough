@@ -17,36 +17,10 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JVI-Lp-fxa">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JVI-Lp-fxa">
                     <rect key="frame" x="0.0" y="0.0" width="605" height="600"/>
                 </imageView>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lvn-me-aiT">
-                    <rect key="frame" x="215" y="155" width="175" height="47"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="47" id="bhK-tu-3jc"/>
-                        <constraint firstAttribute="width" constant="175" id="l5S-Jz-TUq"/>
-                    </constraints>
-                    <state key="normal" image="AllowAccess">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    </state>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="layer.cornerRadius" value="2"/>
-                    </userDefinedRuntimeAttributes>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="bhK-tu-3jc"/>
-                            <exclude reference="l5S-Jz-TUq"/>
-                        </mask>
-                    </variation>
-                    <variation key="heightClass=regular-widthClass=compact">
-                        <mask key="constraints">
-                            <include reference="bhK-tu-3jc"/>
-                            <include reference="l5S-Jz-TUq"/>
-                        </mask>
-                    </variation>
-                </button>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCN-8i-CBe">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCN-8i-CBe">
                     <rect key="frame" x="20" y="444" width="280" height="39"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="39" id="SBu-xL-cvW"/>
@@ -68,10 +42,42 @@
                         </mask>
                     </variation>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lvn-me-aiT">
+                    <rect key="frame" x="215" y="155" width="175" height="47"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="47" id="bhK-tu-3jc">
+                            <variation key="heightClass=regular-widthClass=compact" constant="52"/>
+                        </constraint>
+                        <constraint firstAttribute="width" constant="175" id="l5S-Jz-TUq">
+                            <variation key="heightClass=regular-widthClass=compact" constant="220"/>
+                        </constraint>
+                    </constraints>
+                    <state key="normal" image="AllowAccess">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="layer.cornerRadius" value="2"/>
+                    </userDefinedRuntimeAttributes>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="bhK-tu-3jc"/>
+                            <exclude reference="l5S-Jz-TUq"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="bhK-tu-3jc"/>
+                            <include reference="l5S-Jz-TUq"/>
+                        </mask>
+                    </variation>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="lvn-me-aiT" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="176" id="03p-g7-Qnk"/>
+                <constraint firstItem="lvn-me-aiT" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="176" id="03p-g7-Qnk">
+                    <variation key="heightClass=regular-widthClass=compact" constant="91"/>
+                </constraint>
                 <constraint firstAttribute="centerY" secondItem="JVI-Lp-fxa" secondAttribute="centerY" constant="-8" id="2r4-V2-me2">
                     <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                 </constraint>
@@ -91,14 +97,14 @@
                     <exclude reference="NCN-8i-CBe"/>
                 </mask>
                 <mask key="constraints">
+                    <exclude reference="kiS-XB-klb"/>
+                    <exclude reference="pmQ-Zm-Sdj"/>
                     <exclude reference="2r4-V2-me2"/>
                     <exclude reference="P5n-g4-yea"/>
                     <exclude reference="UAS-X0-73q"/>
                     <exclude reference="fzC-sX-ygo"/>
                     <exclude reference="03p-g7-Qnk"/>
                     <exclude reference="OLk-Uv-bJl"/>
-                    <exclude reference="kiS-XB-klb"/>
-                    <exclude reference="pmQ-Zm-Sdj"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=compact">
@@ -106,14 +112,14 @@
                     <include reference="NCN-8i-CBe"/>
                 </mask>
                 <mask key="constraints">
+                    <include reference="kiS-XB-klb"/>
+                    <include reference="pmQ-Zm-Sdj"/>
                     <include reference="2r4-V2-me2"/>
                     <include reference="P5n-g4-yea"/>
                     <include reference="UAS-X0-73q"/>
                     <include reference="fzC-sX-ygo"/>
                     <include reference="03p-g7-Qnk"/>
                     <include reference="OLk-Uv-bJl"/>
-                    <include reference="kiS-XB-klb"/>
-                    <include reference="pmQ-Zm-Sdj"/>
                 </mask>
             </variation>
         </view>
