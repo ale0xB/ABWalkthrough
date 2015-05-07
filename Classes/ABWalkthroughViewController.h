@@ -24,6 +24,7 @@
 - (void)addPageWithImage:(UIImage *)image andDescription:(NSString *)description;
 - (void)addPageWithVideoFileName:(NSString *)videoFileName andDescription:(NSString *)description;
 - (void)showTooltipAtPageIndex:(NSUInteger)index withText:(NSString *)text;
+- (void)hideTooltipAtPageIndex:(NSUInteger)index;
 
 #pragma mark - Setup
 

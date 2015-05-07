@@ -40,6 +40,7 @@ static CGFloat const ABMotionFrameOffset    = 15.0;
 
 @property (assign, nonatomic) NSInteger otherPageNumber;
 @property (assign, nonatomic) CGFloat lastContentOffset;
+
 @end
 
 @implementation ABWalkthroughViewController
@@ -142,6 +143,16 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
     [popTip showText:text direction:AMPopTipDirectionUp maxWidth:100.0f inView:[self.viewControllers[index] view] fromFrame:self.pageControl.frame];
 }
 
+- (void)hideTooltipAtPageIndex:(NSUInteger)index
+{
+    for (UIView *view in [[self.viewControllers[index] view] subviews]) {
+        if ([view isKindOfClass:[AMPopTip class]]) {
+            [((AMPopTip *)view) hide];
+            break;
+        }
+    }
+}
+
 
 #pragma mark - Setup Methods
 
@@ -211,6 +222,7 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
         _pageControl = [[TAPageControl alloc] initWithFrame:CGRectMake(0, pageControlY, CGRectGetWidth(self.view.frame), 40)];
         [_pageControl setNumberOfPages:[self.viewControllers count]];
         [_pageControl setProgressive:YES];
+        [_pageControl setDotSize:CGSizeMake(4, 4)];
 //        [_pageControl setPageControlStyle:PageControlStyleStrokedCircle];
 //        [_pageControl setCurrentPage:(int)0];
 //        [_pageControl setCoreNormalColor:[UIColor clearColor]];
@@ -268,7 +280,13 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
         otherScrollView.contentOffset = CGPointMake(multiplier * ABPercentageMultiplier * width - (ABPercentageMultiplier * (offset - (width * self.pageControl.currentPage))), 0.0f);
         NSAssert([otherScrollView isKindOfClass:[UIScrollView class]], @"otherScrollView must be of class UIScrollView");
     }
-
+    
+    // Update the page when more than 50% of the previous/next page is visible
+    NSInteger page = self.scrollView.contentOffset.x / getFrameWidth(self);
+    [self.pageControl setCurrentPage:(int)page];
+    if (self.pageControl.currentPage == self.pageControl.numberOfPages - 1) {
+        [(ABInterface *)self.viewControllers[self.pageControl.currentPage] showButtons];
+    }
 }
 
 
@@ -283,14 +301,9 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
     internalScrollView.contentOffset = CGPointMake(0.0f, 0.0f);
     otherScrollView.contentOffset = CGPointMake(0.0f, 0.0f);
     
-    // Update the page when more than 50% of the previous/next page is visible
     NSInteger page = self.scrollView.contentOffset.x / getFrameWidth(self);
     if (self.delegate && [self.delegate respondsToSelector:@selector(walkthroughViewController:didScrollToSlideWithTag:)]) {
         [self.delegate walkthroughViewController:self didScrollToSlideWithTag:page];
-    }
-    [self.pageControl setCurrentPage:(int)page];
-    if (self.pageControl.currentPage == self.pageControl.numberOfPages - 1) {
-        [(ABInterface *)self.viewControllers[self.pageControl.currentPage] showButtons];
     }
 }
 
