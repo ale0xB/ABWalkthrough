@@ -53,12 +53,6 @@
     [self.media startAnimator];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-}
-
 - (void)prepareVideo
 {
     CALayer *mainLayer = self.view.layer;

@@ -91,6 +91,14 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
     [self.view addSubview:self.scrollView];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if (self.navigationController) {
+        [self.viewControllers makeObjectsPerformSelector:@selector(viewWillAppear:)];
+    }
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
