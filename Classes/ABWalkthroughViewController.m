@@ -144,11 +144,11 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
 
 #pragma Tooltip
 
-- (void)showTooltipAtPageIndex:(NSUInteger)index withText:(NSString *)text
+- (void)showTooltipAtPageIndex:(NSUInteger)index withText:(NSString *)text andDuration:(NSTimeInterval)duration
 {
     AMPopTip *popTip = [AMPopTip popTip];
     popTip.shouldDismissOnTapOutside = YES;
-    [popTip showText:text direction:AMPopTipDirectionUp maxWidth:100.0f inView:[self.viewControllers[index] view] fromFrame:self.pageControl.frame];
+    [popTip showText:text direction:AMPopTipDirectionUp maxWidth:100.0f inView:[self.viewControllers[index] view] fromFrame:self.pageControl.frame duration:duration];
 }
 
 - (void)hideTooltipAtPageIndex:(NSUInteger)index
