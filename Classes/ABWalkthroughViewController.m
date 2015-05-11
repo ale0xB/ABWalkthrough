@@ -9,6 +9,7 @@
 #import "ABWalkthroughViewController.h"
 #import "ABInterface.h"
 #import "ABVideoLoopViewController.h"
+#import <TAPageControl/TADotView.h>
 #import <AMPopTip.h>
 #import <QuartzCore/QuartzCore.h>
 
@@ -105,6 +106,11 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
     if (self.showInitialAnimation) {
         [self performInitialAnimation];
     }
+    
+    if (self.navigationController) {
+        [self.viewControllers makeObjectsPerformSelector:@selector(viewDidAppear:)];
+    }
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(walkthroughViewControllerDidAppear:)]) {
         [self.delegate walkthroughViewControllerDidAppear:self];
     }
@@ -199,8 +205,7 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
         UIScrollView *internalScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(diff, 0.0f, width - (diff * 2.0), height)];
         internalScrollView.scrollEnabled = NO;
         
-        [viewController.view setFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth(internalScrollView.frame) + ABMotionFrameOffset, CGRectGetHeight(internalScrollView.frame) + ABMotionFrameOffset)];
-//        [self addMotionEffectToView:viewController.view magnitude:ABMotionMagnitude];
+        [viewController.view setFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth(internalScrollView.frame) + ABMotionFrameOffset, CGRectGetHeight(internalScrollView.frame))];
         
         internalScrollView.tag = (slideIndex + 1) * 10;
         viewController.view.tag = (slideIndex + 1) * 1000;
@@ -228,16 +233,10 @@ CGFloat getFrameWidth(ABWalkthroughViewController *object)
     if (!_pageControl) {
         CGFloat pageControlY = CGRectGetHeight(self.view.frame) * 0.90;
         _pageControl = [[TAPageControl alloc] initWithFrame:CGRectMake(0, pageControlY, CGRectGetWidth(self.view.frame), 40)];
+        [_pageControl setDotViewClass:[TADotView class]];
         [_pageControl setNumberOfPages:[self.viewControllers count]];
         [_pageControl setProgressive:YES];
-        [_pageControl setDotSize:CGSizeMake(4, 4)];
-//        [_pageControl setPageControlStyle:PageControlStyleStrokedCircle];
-//        [_pageControl setCurrentPage:(int)0];
-//        [_pageControl setCoreNormalColor:[UIColor clearColor]];
-//        [_pageControl setCoreSelectedColor:[UIColor whiteColor]];
-//        [_pageControl setStrokeNormalColor:[UIColor whiteColor]];
-//        [_pageControl setStrokeSelectedColor:[UIColor whiteColor]];
-//        [_pageControl setStrokeWidth:1];
+        [_pageControl setDotSize:CGSizeMake(3, 3)];
     }
     return _pageControl;
 }
